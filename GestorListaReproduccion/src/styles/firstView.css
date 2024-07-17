@@ -1,0 +1,41 @@
+.root {
+    -fx-background-color: #e3c5f5;
+    -fx-text-fill: #300549;
+    -fx-border-color: #300549;
+    -fx-border-width: 3px;
+}
+
+.custom-title {
+    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente*/
+    -fx-font-size: 20px; 
+    -fx-font-weight: bold;
+}
+
+.custom-text {
+    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente*/
+    -fx-font-size: 14px; 
+    -fx-font-weight: bold;
+}
+
+
+/* Estilos para la lista de Musicas */
+.custom-container {
+    -fx-border-color: #300549;
+    -fx-border-width: 1px;
+    -fx-background-color: #e3c5f5;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: #3f0b70; /* Color del fondo de la barra de desplazamiento */
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: #160147; /* Color de los botones de incremento y decremento */
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #9059c4; /* Color de la parte que se arrastra */
+}
