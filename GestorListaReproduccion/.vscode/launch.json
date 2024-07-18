@@ -16,7 +16,8 @@
             "request": "launch",
             "mainClass": "App",
             "projectName": "GestorListaReproduccion_d4f8bda",
-            "vmArgs": "--module-path \"C:\\Users\\YOURDYY\\Downloads\\javafx-sdk-21.0.1\\lib\" --add-modules javafx.controls,javafx.fxml"
-        }
+            "vmArgs": "--module-path \"C:\\Users\\Usuario24A\\Documents\\ffp_workspace\\EDA2024_3\\javafx\\javafx-sdk-21.0.1\\lib\" --add-modules javafx.controls,javafx.fxml"
+    
+        } 
     ]
 }
