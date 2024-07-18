@@ -6,19 +6,19 @@
 }
 
 .custom-title {
-    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente*/
+    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente, solo fuentes instaladas en tu pc*/
     -fx-font-size: 20px; 
     -fx-font-weight: bold;
 }
 
 .custom-text {
-    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente*/
+    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente, solo fuentes instaladas en tu pc*/
     -fx-font-size: 14px; 
     -fx-font-weight: bold;
 }
 
 
-/* Estilos para la lista de Musicas */
+/* Estilos para el contenedor de musicas */
 .custom-container {
     -fx-border-color: #300549;
     -fx-border-width: 1px;
@@ -38,4 +38,18 @@
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
     -fx-background-color: #9059c4; /* Color de la parte que se arrastra */
+}
+
+/* Estilos para la lista de musicas*/
+.custom-list-cont {
+    -fx-background-color: #3f0b70;
+}
+
+.custom-list {
+    -fx-background-color: #9059c4;
+    -fx-padding: 10px;
+    -fx-border-color: #160147;
+    -fx-font-family: "Yusei Magic", "Arial"; /*Pueden poner otra fuente*/
+    -fx-font-size: 12px; 
+    -fx-font-weight: bold;
 }
