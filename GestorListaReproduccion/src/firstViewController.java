@@ -25,7 +25,7 @@ public class firstViewController {
     @FXML
     private void initialize() {
         // Anade algunas canciones de ejemplo. Mas adelante se leerá el archivo *.csv
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 100; i++) { 
             playlist.add(new Song("Song " + i, "Artist " + i));
         }
 
@@ -46,7 +46,7 @@ public class firstViewController {
             current = current.next; // Avanzar al siguiente nodo
             index++;
         }
-    }
+    } 
 
     private VBox createOrUpdateSongBox(Song song, int index) {
         VBox box = new VBox(); // Crear un nuevo VBox para la cancion

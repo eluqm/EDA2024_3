@@ -1,66 +1,82 @@
 package linkedList;
 public class LinkedList<T> {
     private Node<T> head;
+    private Node<T> tail; 
 
     public LinkedList() {
         this.head = null;
+        this.tail = null;
     }
     public void add(T data) {
         Node<T> newNode = new Node<>(data);
         if (head == null) {
             head = newNode;
+            tail = newNode;
         } else {
-            Node<T> current = head;
-            while (current.next != null) {
-                current = current.next;
-            }
-            current.next = newNode;
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
     }
 
     public void move(int fromIndex, int toIndex) {
         if (fromIndex == toIndex) return;
-    
-        // Inicializar variables
-        Node<T> prevFrom = null, fromNode = null;
-        Node<T> prevTo = null, toNode = null;
+
         Node<T> current = head;
-        int index = 0;
-    
-        // Buscar nodos y sus predecesores
-        while (current != null) {
-            if (index == fromIndex - 1) prevFrom = current;
-            if (index == fromIndex) fromNode = current;
-            if (index == toIndex - 1) prevTo = current;
-            if (index == toIndex) toNode = current;
+        Node<T> fromNode = null, toNode = null;
+        Node<T> prevFrom = null, prevTo = null;
+
+        // Buscar fromNode y toNode
+        for (int index = 0; current != null; index++) {
+            if (index == fromIndex) {
+                fromNode = current;
+                prevFrom = current.prev;
+            }
+            if (index == toIndex) {
+                toNode = current;
+                prevTo = current.prev;
+            }
             current = current.next;
-            index++;
         }
-    
-        // Verificar si los nodos son válidos
+
         if (fromNode == null) return;
-    
+
         // Eliminar fromNode de su posición actual
         if (prevFrom != null) {
             prevFrom.next = fromNode.next;
         } else {
             head = fromNode.next;
         }
-    
-        // Mover fromNode a la nueva posición
+        if (fromNode.next != null) {
+            fromNode.next.prev = prevFrom;
+        }
+
+        // Insertar fromNode en la nueva posición
         if (toIndex == 0) {
             fromNode.next = head;
-            head = fromNode;
-        } else if (toIndex > fromIndex) {
-            if (toNode != null) {
-                fromNode.next = toNode.next;
-                toNode.next = fromNode;
+            if (head != null) {
+                head.prev = fromNode;
             }
-        } else {
+            head = fromNode;
+            fromNode.prev = null;
+        } else if (toNode != null) {
+            fromNode.next = toNode;
+            fromNode.prev = prevTo;
             if (prevTo != null) {
-                fromNode.next = prevTo.next;
                 prevTo.next = fromNode;
             }
+            toNode.prev = fromNode;
+        } else {
+            current = head;
+            for (int index = 0; index < toIndex && current.next != null; index++) {
+                current = current.next;
+            }
+            fromNode.next = current.next;
+            fromNode.prev = current;
+            if (current.next != null) {
+                current.next.prev = fromNode;
+            }
+            current.next = fromNode;
         }
     }
 
