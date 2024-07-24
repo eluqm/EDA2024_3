@@ -19,7 +19,7 @@ public class Song implements Comparable<Song> {
     private String tempo;
     private float duration;
     private String timeSignature;
-
+    
     //artist_name,track_name,track_id,popularity,year,genre,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,duration_ms,time_signature
 
     public Song(String artistName, String trackName, String trackID, int popularity, short year, String genre, String danceability, String energy, String key, String loudness, String mode, String speechiness, String acousticness, String instrumentalness, String liveness, String valence, String tempo, int durationms, String timeSignature) {

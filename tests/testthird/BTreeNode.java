@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class BTreeNode<T extends Comparable<T>> {
-    List<OrderYear<T>> keys;
-    List<BTreeNode<T>> children;
+class BTreeNode<K extends Comparable<K>, T> {
+    List<OrderAttribute<K, T>> keys;
+    List<BTreeNode<K, T>> children;
     boolean isLeaf;
 
     public BTreeNode(boolean isLeaf) {

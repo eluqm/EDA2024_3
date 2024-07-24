@@ -1,6 +1,8 @@
+import java.util.ArrayList;
+import java.util.List;
 
-class BTree<T extends Comparable<T>> {
-    private BTreeNode<T> root;
+class BTree<K extends Comparable<K>, T> {
+    private BTreeNode<K, T> root;
     private final int minDegree = 3; // Para un árbol B de orden 5, minDegree debe ser 3
 
     // Constructor
@@ -9,24 +11,24 @@ class BTree<T extends Comparable<T>> {
     }
 
     // Método para insertar una nueva canción en el árbol B
-    public void insert(Song song) {
-        OrderYear<Song> orderYear = new OrderYear<>(song.getYear());
-        orderYear.addMusic(song);
-        BTreeNode<T> root = this.root;
+    public void insert(T item, K attribute) {
+        OrderAttribute<K, T> orderAttribute = new OrderAttribute<>(attribute);
+        orderAttribute.addMusic(item);
+        BTreeNode<K, T> root = this.root;
         if (root.keys.size() == 2 * minDegree - 1) {
-            BTreeNode<T> newNode = new BTreeNode<>(false);
+            BTreeNode<K, T> newNode = new BTreeNode<>(false);
             newNode.children.add(root);
             this.root = newNode;
             splitChild(newNode, 0, root);
-            insertNonFull(newNode, orderYear);
+            insertNonFull(newNode, orderAttribute);
         } else {
-            insertNonFull(root, orderYear);
+            insertNonFull(root, orderAttribute);
         }
     }
 
     // Método para dividir un nodo hijo cuando está lleno
-    private void splitChild(BTreeNode<T> parent, int index, BTreeNode<T> child) {
-        BTreeNode<T> newNode = new BTreeNode<>(child.isLeaf);
+    private void splitChild(BTreeNode<K, T> parent, int index, BTreeNode<K, T> child) {
+        BTreeNode<K, T> newNode = new BTreeNode<>(child.isLeaf);
         parent.children.add(index + 1, newNode);
         parent.keys.add(index, child.keys.get(minDegree - 1));
 
@@ -40,41 +42,42 @@ class BTree<T extends Comparable<T>> {
     }
 
     // Método para insertar una clave en un nodo que no está lleno
-    private void insertNonFull(BTreeNode<T> node, OrderYear<Song> orderYear) {
+    private void insertNonFull(BTreeNode<K, T> node, OrderAttribute<K, T> orderAttribute) {
         int index = node.keys.size() - 1;
 
         if (node.isLeaf) {
-            while (index >= 0 && orderYear.compareTo((OrderYear<Song>) node.keys.get(index)) < 0) {
+            while (index >= 0 && orderAttribute.compareTo(node.keys.get(index)) < 0) {
                 index--;
             }
-            if (index >= 0 && node.keys.get(index).getYear() == orderYear.getYear()) {
-                node.keys.get(index).addMusic((T) orderYear.getListMusic().get(0));
+            if (index >= 0 && node.keys.get(index).getAttributeKey().equals(orderAttribute.getAttributeKey())) {
+                node.keys.get(index).addMusic(orderAttribute.getListMusic().get(0));
             } else {
-                node.keys.add(index + 1, (OrderYear<T>) orderYear);
+                node.keys.add(index + 1, orderAttribute);
             }
         } else {
-            while (index >= 0 && orderYear.compareTo((OrderYear<Song>) node.keys.get(index)) < 0) {
+            while (index >= 0 && orderAttribute.compareTo(node.keys.get(index)) < 0) {
                 index--;
             }
             index++;
-            BTreeNode<T> child = node.children.get(index);
+            BTreeNode<K, T> child = node.children.get(index);
             if (child.keys.size() == 2 * minDegree - 1) {
                 splitChild(node, index, child);
-                if (orderYear.compareTo((OrderYear<Song>) node.keys.get(index)) > 0) {
+                if (orderAttribute.compareTo(node.keys.get(index)) > 0) {
                     index++;
                 }
             }
-            insertNonFull(node.children.get(index), orderYear);
+            insertNonFull(node.children.get(index), orderAttribute);
         }
     }
 
-    public void delete(Song song) {
+    // Método para eliminar una canción del árbol B
+    public void delete(T item, K attribute) {
         if (root == null) {
             System.out.println("El árbol está vacío");
             return;
         }
 
-        delete(root, song.getArtistName(), song.getTrackName(), song.getYear());
+        delete(root, item, attribute);
 
         if (root.keys.size() == 0) {
             if (root.isLeaf) {
@@ -85,18 +88,19 @@ class BTree<T extends Comparable<T>> {
         }
     }
 
-    private void delete(BTreeNode<T> node, String artistName, String trackName, short year) {
-        int idx = findKey(node, year);
+    // Método auxiliar para eliminar una canción en un nodo específico
+    private void delete(BTreeNode<K, T> node, T item, K attribute) {
+        int idx = findKey(node, attribute);
 
-        if (idx < node.keys.size() && node.keys.get(idx).getYear() == year) {
+        if (idx < node.keys.size() && node.keys.get(idx).getAttributeKey().equals(attribute)) {
             if (node.isLeaf) {
-                ((OrderYear<Song>) node.keys.get(idx)).removeMusic(artistName, trackName, year);
+                removeItemFromOrderAttribute(node.keys.get(idx), item);
             } else {
-                deleteInternalNode(node, artistName, trackName, year, idx);
+                deleteInternalNode(node, item, attribute, idx);
             }
         } else {
             if (node.isLeaf) {
-                System.out.println("La llave " + year + " no está en el árbol");
+                System.out.println("El item " + item + " no está en el árbol");
                 return;
             }
 
@@ -107,55 +111,60 @@ class BTree<T extends Comparable<T>> {
             }
 
             if (flag && idx > node.keys.size()) {
-                delete(node.children.get(idx - 1), artistName, trackName, year);
+                delete(node.children.get(idx - 1), item, attribute);
             } else {
-                delete(node.children.get(idx), artistName, trackName, year);
+                delete(node.children.get(idx), item, attribute);
             }
         }
     }
 
-    private int findKey(BTreeNode<T> node, short year) {
+    // Método para encontrar la posición de una clave en un nodo
+    private int findKey(BTreeNode<K, T> node, K attribute) {
         int idx = 0;
-        while (idx < node.keys.size() && ((OrderYear<Song>) node.keys.get(idx)).getYear() < year) {
+        while (idx < node.keys.size() && node.keys.get(idx).getAttributeKey().compareTo(attribute) < 0) {
             idx++;
         }
         return idx;
     }
 
-    private void deleteInternalNode(BTreeNode<T> node, String artistName, String trackName, short year, int idx) {
-        OrderYear<Song> k = (OrderYear<Song>) node.keys.get(idx);
+    // Método para eliminar una clave de un nodo interno
+    private void deleteInternalNode(BTreeNode<K, T> node, T item, K attribute, int idx) {
+        OrderAttribute<K, T> k = node.keys.get(idx);
 
         if (node.children.get(idx).keys.size() >= minDegree) {
-            OrderYear<Song> pred = getPredecessor(node, idx);
-            node.keys.set(idx, (OrderYear<T>) pred);
-            delete(node.children.get(idx), artistName, trackName, year);
+            OrderAttribute<K, T> pred = getPredecessor(node, idx);
+            node.keys.set(idx, pred);
+            delete(node.children.get(idx), item, attribute);
         } else if (node.children.get(idx + 1).keys.size() >= minDegree) {
-            OrderYear<Song> succ = getSuccessor(node, idx);
-            node.keys.set(idx, (OrderYear<T>) succ);
-            delete(node.children.get(idx + 1), artistName, trackName, year);
+            OrderAttribute<K, T> succ = getSuccessor(node, idx);
+            node.keys.set(idx, succ);
+            delete(node.children.get(idx + 1), item, attribute);
         } else {
             merge(node, idx);
-            delete(node.children.get(idx), artistName, trackName, year);
+            delete(node.children.get(idx), item, attribute);
         }
     }
 
-    private OrderYear<Song> getPredecessor(BTreeNode<T> node, int idx) {
-        BTreeNode<T> cur = node.children.get(idx);
+    // Método para obtener el predecesor de una clave en un nodo
+    private OrderAttribute<K, T> getPredecessor(BTreeNode<K, T> node, int idx) {
+        BTreeNode<K, T> cur = node.children.get(idx);
         while (!cur.isLeaf) {
             cur = cur.children.get(cur.keys.size());
         }
-        return (OrderYear<Song>) cur.keys.get(cur.keys.size() - 1);
+        return cur.keys.get(cur.keys.size() - 1);
     }
 
-    private OrderYear<Song> getSuccessor(BTreeNode<T> node, int idx) {
-        BTreeNode<T> cur = node.children.get(idx + 1);
+    // Método para obtener el sucesor de una clave en un nodo
+    private OrderAttribute<K, T> getSuccessor(BTreeNode<K, T> node, int idx) {
+        BTreeNode<K, T> cur = node.children.get(idx + 1);
         while (!cur.isLeaf) {
             cur = cur.children.get(0);
         }
-        return (OrderYear<Song>) cur.keys.get(0);
+        return cur.keys.get(0);
     }
 
-    private void fill(BTreeNode<T> node, int idx) {
+    // Método para rellenar un nodo hijo que tiene menos claves que las permitidas
+    private void fill(BTreeNode<K, T> node, int idx) {
         if (idx != 0 && node.children.get(idx - 1).keys.size() >= minDegree) {
             borrowFromPrev(node, idx);
         } else if (idx != node.keys.size() && node.children.get(idx + 1).keys.size() >= minDegree) {
@@ -169,9 +178,10 @@ class BTree<T extends Comparable<T>> {
         }
     }
 
-    private void borrowFromPrev(BTreeNode<T> node, int idx) {
-        BTreeNode<T> child = node.children.get(idx);
-        BTreeNode<T> sibling = node.children.get(idx - 1);
+    // Método para tomar prestada una clave del nodo hermano anterior
+    private void borrowFromPrev(BTreeNode<K, T> node, int idx) {
+        BTreeNode<K, T> child = node.children.get(idx);
+        BTreeNode<K, T> sibling = node.children.get(idx - 1);
 
         child.keys.add(0, node.keys.get(idx - 1));
         node.keys.set(idx - 1, sibling.keys.remove(sibling.keys.size() - 1));
@@ -181,9 +191,10 @@ class BTree<T extends Comparable<T>> {
         }
     }
 
-    private void borrowFromNext(BTreeNode<T> node, int idx) {
-        BTreeNode<T> child = node.children.get(idx);
-        BTreeNode<T> sibling = node.children.get(idx + 1);
+    // Método para tomar prestada una clave del nodo hermano siguiente
+    private void borrowFromNext(BTreeNode<K, T> node, int idx) {
+        BTreeNode<K, T> child = node.children.get(idx);
+        BTreeNode<K, T> sibling = node.children.get(idx + 1);
 
         child.keys.add(node.keys.get(idx));
         node.keys.set(idx, sibling.keys.remove(0));
@@ -193,9 +204,10 @@ class BTree<T extends Comparable<T>> {
         }
     }
 
-    private void merge(BTreeNode<T> node, int idx) {
-        BTreeNode<T> child = node.children.get(idx);
-        BTreeNode<T> sibling = node.children.get(idx + 1);
+    // Método para fusionar un nodo con su nodo hermano
+    private void merge(BTreeNode<K, T> node, int idx) {
+        BTreeNode<K, T> child = node.children.get(idx);
+        BTreeNode<K, T> sibling = node.children.get(idx + 1);
 
         child.keys.add(node.keys.remove(idx));
         child.keys.addAll(sibling.keys);
@@ -207,6 +219,15 @@ class BTree<T extends Comparable<T>> {
         node.children.remove(idx + 1);
     }
 
+    // Método para eliminar una canción específica de un OrderAttribute
+    private void removeItemFromOrderAttribute(OrderAttribute<K, T> orderAttribute, T item) {
+        List<T> itemList = orderAttribute.getListMusic();
+        if (itemList.remove(item)) {
+            System.out.println("Item " + item + " eliminado del atributo " + orderAttribute.getAttributeKey());
+        } else {
+            System.out.println("El item " + item + " no está en la lista del atributo " + orderAttribute.getAttributeKey());
+        }
+    }
 
     // Método para recorrer el árbol B y mostrar sus claves
     public void traverse() {
@@ -214,7 +235,7 @@ class BTree<T extends Comparable<T>> {
     }
 
     // Método auxiliar para recorrer el árbol B en orden
-    private void traverse(BTreeNode<T> node) {
+    private void traverse(BTreeNode<K, T> node) {
         int i;
         for (i = 0; i < node.keys.size(); i++) {
             if (!node.isLeaf) {
@@ -234,7 +255,7 @@ class BTree<T extends Comparable<T>> {
     }
 
     // Método auxiliar para recorrer el árbol B en orden descendente
-    private void traverseDescending(BTreeNode<T> node) {
+    private void traverseDescending(BTreeNode<K, T> node) {
         int i;
         for (i = node.keys.size() - 1; i >= 0; i--) {
             if (!node.isLeaf) {

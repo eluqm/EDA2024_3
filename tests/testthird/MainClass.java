@@ -1,6 +1,6 @@
 public class MainClass {
     public static void main(String[] args) {
-        BTree<OrderYear<Song>> bTree = new BTree<>();
+        BTree<String, Song> bTree = new BTree<>();
 
         // Crear algunas canciones
         Song song1 = new Song("Artist A", "Track 1", (short) 2020);
@@ -11,12 +11,12 @@ public class MainClass {
         Song song6 = new Song("Artist F", "Track 6", (short) 2022);
 
         // Insertar canciones en el árbol B
-        bTree.insert(song1);
-        bTree.insert(song2);
-        bTree.insert(song3);
-        bTree.insert(song4);
-        bTree.insert(song5);
-        bTree.insert(song6);
+        bTree.insert(song1, song1.getArtistName());
+        bTree.insert(song2, song2.getArtistName());
+        bTree.insert(song3, song3.getArtistName());
+        bTree.insert(song4, song4.getArtistName());
+        bTree.insert(song5, song5.getArtistName());
+        bTree.insert(song6, song6.getArtistName());
 
         // Recorrer y mostrar el árbol B en orden ascendente
         System.out.println("Recorrido del árbol B en orden ascendente:");
@@ -31,7 +31,7 @@ public class MainClass {
         Song song = new Song("Artist A", "Track 1", (short) 2020);
 
         // Eliminar una canción del árbol B
-        bTree.delete(song);
+        bTree.delete(song2, song2.getArtistName());
         System.out.println("Recorrido del árbol B en orden ascendente:");
         bTree.traverse();
     }
