@@ -11,7 +11,7 @@ public class MainClass {
         Song song6 = new Song("Artist F", "Track 6", (short) 2022);
 
         // Insertar canciones en el árbol B
-        bTree.insert(song1, song1.getArtistName());
+        bTree.insert(song1, song1.getArtistName()); //El atributo se manejara con condicionales o swith case
         bTree.insert(song2, song2.getArtistName());
         bTree.insert(song3, song3.getArtistName());
         bTree.insert(song4, song4.getArtistName());
