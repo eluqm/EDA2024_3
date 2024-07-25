@@ -8,6 +8,8 @@ public class CSVReader {
     public void readCSV(String filePath, BTree<Short, Song> bTree) {
         String line;
         String csvSplitBy = ",";
+        
+        long a = System.nanoTime();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             // Leer la primera línea (encabezados)
             br.readLine();
@@ -44,7 +46,6 @@ public class CSVReader {
                         Integer.parseInt(songData[18]), // durationms
                         songData[19] // timeSignature
                     );
-
                     // Insertar la canción en el árbol B
                     bTree.insert(song, song.getYear());
                 } catch (NumberFormatException e) {
@@ -55,8 +56,10 @@ public class CSVReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+         long b = System.nanoTime();
+         System.out.println(b-a);
     }
-
+    
     // Método principal para probar la lectura del CSV y la inserción en el BTree
     public static void main(String[] args) {
         BTree<Short, Song> bTree = new BTree<>();
@@ -67,5 +70,8 @@ public class CSVReader {
         
         // Recorrer y mostrar el árbol B
         bTree.traverse();
+
+      
     }
+
 }
