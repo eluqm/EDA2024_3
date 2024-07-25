@@ -16,31 +16,40 @@ public class CSVReader {
             while ((line = br.readLine()) != null) {
                 String[] songData = line.split(csvSplitBy);
 
-                // Crear un objeto Song con los datos leídos
-                Song song = new Song(
-                    songData[0], // artistName
-                    songData[1], // trackName
-                    songData[2], // trackID
-                    Integer.parseInt(songData[3]), // popularity
-                    Short.parseShort(songData[4]), // year
-                    songData[5], // genre
-                    songData[6], // danceability
-                    songData[7], // energy
-                    songData[8], // key
-                    songData[9], // loudness
-                    songData[10], // mode
-                    songData[11], // speechiness
-                    songData[12], // acousticness
-                    songData[13], // instrumentalness
-                    songData[14], // liveness
-                    songData[15], // valence
-                    songData[16], // tempo
-                    Integer.parseInt(songData[17]), // durationms
-                    songData[18] // timeSignature
-                );
+                // Asegurarse de que hay suficientes datos
+                if (songData.length < 19) {
+                    continue;
+                }
 
-                // Insertar la canción en el árbol B
-                bTree.insert(song, song.getYear());
+                try {
+                    // Crear un objeto Song con los datos leídos
+                    Song song = new Song(
+                        songData[0], // artistName
+                        songData[1], // trackName
+                        songData[2], // trackID
+                        Integer.parseInt(songData[3]), // popularity
+                        Short.parseShort(songData[4]), // year
+                        songData[5], // genre
+                        songData[6], // danceability
+                        songData[7], // energy
+                        songData[8], // key
+                        songData[9], // loudness
+                        songData[10], // mode
+                        songData[11], // speechiness
+                        songData[12], // acousticness
+                        songData[13], // instrumentalness
+                        songData[14], // liveness
+                        songData[15], // valence
+                        songData[16], // tempo
+                        Integer.parseInt(songData[17]), // durationms
+                        songData[18] // timeSignature
+                    );
+
+                    // Insertar la canción en el árbol B
+                    bTree.insert(song, song.getYear());
+                } catch (NumberFormatException e) {
+                    System.err.println("Error al parsear los datos de la canción: " + e.getMessage());
+                }
             }
 
         } catch (IOException e) {
@@ -54,7 +63,7 @@ public class CSVReader {
         CSVReader csvReader = new CSVReader();
         
         // Reemplaza "ruta/al/archivo.csv" con la ruta real de tu archivo CSV
-        csvReader.readCSV(songs.csv, bTree);
+        csvReader.readCSV("songs.csv", bTree);
         
         // Recorrer y mostrar el árbol B
         bTree.traverse();
