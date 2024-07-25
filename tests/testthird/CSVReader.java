@@ -24,25 +24,25 @@ public class CSVReader {
                 try {
                     // Crear un objeto Song con los datos leídos
                     Song song = new Song(
-                        songData[0], // artistName
-                        songData[1], // trackName
-                        songData[2], // trackID
-                        Integer.parseInt(songData[3]), // popularity
-                        Short.parseShort(songData[4]), // year
-                        songData[5], // genre
-                        songData[6], // danceability
-                        songData[7], // energy
-                        songData[8], // key
-                        songData[9], // loudness
-                        songData[10], // mode
-                        songData[11], // speechiness
-                        songData[12], // acousticness
-                        songData[13], // instrumentalness
-                        songData[14], // liveness
-                        songData[15], // valence
-                        songData[16], // tempo
-                        Integer.parseInt(songData[17]), // durationms
-                        songData[18] // timeSignature
+                        songData[1], // artistName
+                        songData[2], // trackName
+                        songData[3], // trackID
+                        Integer.parseInt(songData[4]), // popularity
+                        Short.parseShort(songData[5]), // year
+                        songData[6], // genre
+                        songData[7], // danceability
+                        songData[8], // energy
+                        songData[9], // key
+                        songData[10], // loudness
+                        songData[11], // mode
+                        songData[12], // speechiness
+                        songData[13], // acousticness
+                        songData[14], // instrumentalness
+                        songData[15], // liveness
+                        songData[16], // valence
+                        songData[17], // tempo
+                        Integer.parseInt(songData[18]), // durationms
+                        songData[19] // timeSignature
                     );
 
                     // Insertar la canción en el árbol B
