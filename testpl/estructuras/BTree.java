@@ -1,43 +1,44 @@
 package estructuras;
 
-public class BTree {
-    BTreeNode root;
-    int t;
+public class BTree<T extends Comparable<T>> {
+    BTreeNode<T> root;
+    int t;  // Minimum degree
 
-    BTree(int t) {
+    public BTree(int t) {
         this.root = null;
         this.t = t;
     }
 
-    void traverse() {
+    public void traverse() {
         if (root != null) {
             root.traverse();
         }
     }
 
-    BTreeNode search(Song k) {
-        return (root == null) ? null : root.search(k);
+    public BTreeNode<T> search(T key) {
+        if (root == null) {
+            return null;
+        }
+        return root.search(key);
     }
 
-    void insert(Song k) {
+    public void insert(T key) {
         if (root == null) {
-            root = new BTreeNode(t, true);
-            root.keys.add(0, k);
-            root.n = 1;
+            root = new BTreeNode<>(t, true);
+            root.keys.add(key);
         } else {
-            if (root.n == 2 * t - 1) {
-                BTreeNode s = new BTreeNode(t, false);
-                s.children.add(0, root);
+            if (root.keys.getSize() == 2 * t - 1) {
+                BTreeNode<T> s = new BTreeNode<>(t, false);
+                s.children.add(root);
                 s.splitChild(0, root);
-
                 int i = 0;
-                if (s.keys.get(0).compareTo(k) < 0) {
+                if (s.keys.get(0).compareTo(key) < 0) {
                     i++;
                 }
-                s.children.get(i).insertNonFull(k);
+                s.children.get(i).insertNonFull(key);
                 root = s;
             } else {
-                root.insertNonFull(k);
+                root.insertNonFull(key);
             }
         }
     }

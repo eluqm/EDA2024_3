@@ -1,6 +1,4 @@
-package estructuras;
-
-public class BTreeNode {
+class BTreeNode {
     int t;  // Minimum degree (defines the range for number of keys)
     DynamicArray<Song> keys;  // An array of keys
     DynamicArray<BTreeNode> children;  // An array of child pointers
@@ -93,3 +91,4 @@ public class BTreeNode {
         return children.get(i).search(k);
     }
 }
+

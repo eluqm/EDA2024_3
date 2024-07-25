@@ -1,4 +1,6 @@
-class MyQueue<T> {
+package estructuras;
+
+public class MyQueue<T> {
     private Node<T> front, rear;
 
     private static class Node<T> {

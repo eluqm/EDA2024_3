@@ -7,7 +7,7 @@ public class Main {
         String csvFile = "songs.csv";
         String line;
         String cvsSplitBy = ",";
-        BTree bTree = new BTree(3);  // Grado mínimo t = 3
+        BTree<Song> bTree = new BTree<>(3);  // Grado mínimo t = 3
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             br.readLine(); // Leer y descartar la línea de encabezado
@@ -21,19 +21,19 @@ public class Main {
                         Integer.parseInt(songData[3]), // popularity
                         Short.parseShort(songData[4]), // year
                         songData[5], // genre
-                        songData[6], // danceability
-                        songData[7], // energy
-                        songData[8], // key
-                        songData[9], // loudness
-                        songData[10], // mode
-                        songData[11], // speechiness
-                        songData[12], // acousticness
-                        songData[13], // instrumentalness
-                        songData[14], // liveness
-                        songData[15], // valence
-                        songData[16], // tempo
+                        Float.parseFloat(songData[6]), // danceability
+                        Float.parseFloat(songData[7]), // energy
+                        Integer.parseInt(songData[8]), // key
+                        Float.parseFloat(songData[9]), // loudness
+                        Integer.parseInt(songData[10]), // mode
+                        Float.parseFloat(songData[11]), // speechiness
+                        Float.parseFloat(songData[12]), // acousticness
+                        Float.parseFloat(songData[13]), // instrumentalness
+                        Float.parseFloat(songData[14]), // liveness
+                        Float.parseFloat(songData[15]), // valence
+                        Float.parseFloat(songData[16]), // tempo
                         Integer.parseInt(songData[17]), // durationms
-                        songData[18] // timeSignature
+                        Integer.parseInt(songData[18])  // timeSignature
                 );
                 bTree.insert(song);
             }
@@ -50,16 +50,16 @@ public class Main {
         printAllSongs(bTree);
     }
 
-    public static void printAllSongs(BTree bTree) {
+    public static void printAllSongs(BTree<Song> bTree) {
         if (bTree.root == null) {
             return;
         }
 
-        MyQueue<BTreeNode> queue = new MyQueue<>();
+        MyQueue<BTreeNode<Song>> queue = new MyQueue<>();
         queue.enqueue(bTree.root);
 
         while (!queue.isEmpty()) {
-            BTreeNode current = queue.dequeue();
+            BTreeNode<Song> current = queue.dequeue();
 
             for (int i = 0; i < current.n; i++) {
                 System.out.println(current.keys.get(i).getTrackName());
