@@ -26,35 +26,28 @@ public class DynamicArray<T> {
         return (T) data[index];
     }
 
-    public void set(int index, T element) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
-        }
-        data[index] = element;
-    }
-
     public void add(T element) {
         ensureCapacity();
         data[size++] = element;
     }
 
-    public void remove(int index) {
-        if (index >= size || index < 0) {
+    public void add(int index, T element) {
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
+        ensureCapacity();
+        for (int i = size; i > index; i--) {
+            data[i] = data[i - 1];
         }
-        data[--size] = null;
+        data[index] = element;
+        size++;
     }
 
     private void ensureCapacity() {
         if (size == capacity) {
             capacity *= 2;
             Object[] newData = new Object[capacity];
-            for (int i = 0; i < size; i++) {
-                newData[i] = data[i];
-            }
+            System.arraycopy(data, 0, newData, 0, size);
             data = newData;
         }
     }

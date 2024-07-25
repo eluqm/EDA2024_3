@@ -1,16 +1,18 @@
 package estructuras;
 
 public class BTreeNode<T extends Comparable<T>> {
-    int t;  // Minimum degree
-    DynamicArray<T> keys;
-    DynamicArray<BTreeNode<T>> children;
-    boolean leaf;
+    int t;  // Minimum degree (defines the range for number of keys)
+    DynamicArray<T> keys;  // An array of keys
+    DynamicArray<BTreeNode<T>> children;  // An array of child pointers
+    int n;  // Current number of keys
+    boolean leaf;  // Is true when node is leaf. Otherwise false
 
     public BTreeNode(int t, boolean leaf) {
         this.t = t;
         this.leaf = leaf;
         this.keys = new DynamicArray<>();
         this.children = new DynamicArray<>();
+        this.n = 0;
     }
 
     public void insertNonFull(T key) {

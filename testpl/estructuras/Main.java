@@ -1,3 +1,7 @@
+import estructuras.BTree;
+import estructuras.MyQueue;
+import estructuras.BTreeNode;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
